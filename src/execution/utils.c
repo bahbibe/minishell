@@ -14,6 +14,7 @@
 
 void	reset_io(int *save)
 {
+	fflush(stdout);
 	dup2(save[0], 0);
 	dup2(save[1], 1);
 }

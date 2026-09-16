@@ -87,9 +87,9 @@ char	get_type(char *content)
 		return ('"');
 	if (ft_strcmp(content, SINGLE_QUOTES))
 		return ('\'');
-	if (ft_strcmp(content, SPACE))
+	if (ft_strcmp(content, SPACE_STR))
 		return ('S');
-	if (ft_strcmp(content, TAB))
+	if (ft_strcmp(content, TAB_STR))
 		return ('T');
 	else
 		return ('W');

@@ -24,13 +24,14 @@
 # include <dirent.h>
 # include <errno.h>
 # include <string.h>
+# include <stdint.h>
 
 # define LEFT_REDIRECT ">"
 # define RIGHT_REDIRECT "<"
 # define DOUBLE_QUOTES "\""
 # define SINGLE_QUOTES "'"
-# define SPACE " "
-# define TAB "	"
+# define SPACE_STR " "
+# define TAB_STR "	"
 # define DOLAR "$"
 # define FIRST 1
 # define INPIPE 2

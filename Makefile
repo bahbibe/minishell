@@ -24,7 +24,7 @@ NAME = minishell
 PARSE_PATH = ./src/parser/
 EXECUTION_PATH = ./src/execution/
 OBG = $(SRCS:.c=.o)
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -fcommon
 # CFLAGS += -fsanitize=address -g3
 SRCS = main.c \
 		$(PARSE_PATH)get_next_line/get_next_line.c \
@@ -67,11 +67,18 @@ SRCS = main.c \
 		$(EXECUTION_PATH)status.c \
 		$(EXECUTION_PATH)utils.c \
 
+UNAME_S = $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+READLINE_PREFIX = $(shell brew --prefix readline 2>/dev/null)
+CFLAGS += -I$(READLINE_PREFIX)/include
+LDFLAGS += -L$(READLINE_PREFIX)/lib
+endif
+
 all: $(NAME)
 
 $(NAME): $(OBG)
-	@stty -echoctl
-	@$(CC) $(CFLAGS) -lreadline $(OBG) -L ~/homebrew/Cellar/readline/8.2.1/lib -o $(NAME)
+	-@stty -echoctl 2>/dev/null
+	@$(CC) $(CFLAGS) $(OBG) $(LDFLAGS) -lreadline -o $(NAME)
 	@echo "$(Green)Minishell Compiled ✅$(Off)"
 
 clean:
@@ -81,20 +88,4 @@ fclean: clean
 re: fclean all
 .PHONY: all clean fclean re
 .SILENT: $(OBJS)
-# readline is keg-only, which means it was not symlinked into /usr/local,
-# because macOS provides BSD libedit.
-
-# For compilers to find readline you may need to set:
-#   export LDFLAGS="-L/usr/local/opt/readline/lib"
-#   export CPPFLAGS="-I/usr/local/opt/readline/include"
-
-# ==> Summary
-# 🍺  /usr/local/Cellar/readline/8.2.1: 50 files, 1.7MB
-# ==> Running `brew cleanup readline`...
-# Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
-# Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
-
-
-
-
 

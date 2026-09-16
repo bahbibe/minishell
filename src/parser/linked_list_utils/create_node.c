@@ -36,7 +36,8 @@ t_files	*files_create_node(t_lexer_node *current,
 	node->fd = -1;
 	if (type == 'H')
 	{
-		close(current->temp_fd);
+		if (current->temp_fd != -1)
+			close(current->temp_fd);
 		if (current->expand_here_doc)
 			node->fd = open_herdoc(file, 1);
 		else

@@ -35,7 +35,8 @@ void	free_parser(t_lexer_node *head)
 			files_head = files_head->next;
 			free(temp);
 		}
-		close(head->temp_fd);
+		if (head->temp_fd != -1)
+			close(head->temp_fd);
 		head = head->next;
 	}
 }

@@ -50,12 +50,17 @@ void	executor_builtin(t_lexer_node *head, int pip[2], int tmp, int flag)
 	}
 	get_builtin(*head->cmd_struct.cmd, head->cmd_struct.cmd);
 	reset_io(g_global.save);
+	if (files[0] != -1)
+		close(files[0]);
+	if (files[1] != -1)
+		close(files[1]);
 	free(files);
 }
 
 int	cmd_exec(t_lexer_node *head, int pip[2], int tmp, int flag)
 {
 	pid_t	pid;
+	int		*files;
 
 	pid = fork();
 	if (pid == 0)
@@ -64,12 +69,14 @@ int	cmd_exec(t_lexer_node *head, int pip[2], int tmp, int flag)
 		signal(SIGQUIT, SIG_DFL);
 		if (is_builtin(*head->cmd_struct.cmd))
 		{
-			dup_files(head, pip, tmp, flag);
+			files = dup_files(head, pip, tmp, flag);
 			get_builtin(*head->cmd_struct.cmd, head->cmd_struct.cmd);
 			reset_io(g_global.save);
+			free(files);
 			exit(g_global.error);
 		}
-		close(pip[0]);
+		if (flag != SINGLE)
+			close(pip[0]);
 		dup_files(head, pip, tmp, flag);
 		if (!*head->cmd_struct.cmd)
 			exit (0);

@@ -15,6 +15,8 @@
 void	init_lexer_node(t_lexer_node **head, char *line, char **env)
 {
 	int				i;
+	int				len;
+	char			*start;
 	t_lexer			*lexer;
 	int				j;
 	t_lexer_node	*node;
@@ -24,8 +26,9 @@ void	init_lexer_node(t_lexer_node **head, char *line, char **env)
 	j = 0;
 	while (line[i])
 	{
-		lexer[j].content = get_substring(line + i,
-				get_token_size(line + i, &i));
+		start = line + i;
+		len = get_token_size(line + i, &i);
+		lexer[j].content = get_substring(start, len);
 		lexer[j].type = get_type(lexer[j].content);
 		j++;
 	}
